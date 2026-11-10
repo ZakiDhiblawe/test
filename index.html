@@ -9,9 +9,40 @@
 <body>
   <main class="clock-container">
     <h1 class="clock-title">Real-Time Clock</h1>
-    <time id="clock" class="clock" datetime="">00:00:00</time>
+
+    <div class="analog-clock" id="analog" aria-hidden="true">
+      <div class="face">
+        <div class="tick tick-12"></div>
+        <div class="tick tick-1"></div>
+        <div class="tick tick-2"></div>
+        <div class="tick tick-3"></div>
+        <div class="tick tick-4"></div>
+        <div class="tick tick-5"></div>
+        <div class="tick tick-6"></div>
+        <div class="tick tick-7"></div>
+        <div class="tick tick-8"></div>
+        <div class="tick tick-9"></div>
+        <div class="tick tick-10"></div>
+        <div class="tick tick-11"></div>
+        <div class="hand hour-hand" id="hourHand"></div>
+        <div class="hand minute-hand" id="minuteHand"></div>
+        <div class="hand second-hand" id="secondHand"></div>
+        <div class="center-dot"></div>
+      </div>
+    </div>
+
+    <div class="digital">
+      <time id="clock" class="clock" datetime="">00:00:00</time>
+      <span id="ampm" class="ampm" hidden></span>
+    </div>
+
     <p id="date" class="date"></p>
     <p id="timezone" class="timezone"></p>
+
+    <button id="formatToggle" class="format-toggle" type="button"
+            aria-label="Toggle between 12 hour and 24 hour format">
+      Switch to 12-hour
+    </button>
   </main>
   <script src="script.js"></script>
 </body>

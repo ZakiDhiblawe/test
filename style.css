@@ -1,13 +1,10 @@
 :root {
-  --bg-1: #0f2027;
-  --bg-2: #203a43;
-  --bg-3: #2c5364;
-  --card-bg: rgba(255, 255, 255, 0.08);
-  --card-border: rgba(255, 255, 255, 0.18);
-  --text: #eaf6ff;
-  --muted: rgba(234, 246, 255, 0.65);
-  --accent: #4fd1ff;
-  --second: #ff5f6d;
+  --text: #f1fff0;
+  --muted: rgba(241, 255, 240, 0.72);
+  --accent: #a8f29a;
+  --second: #ffb35c;
+  --card-bg: rgba(8, 26, 18, 0.42);
+  --card-border: rgba(200, 255, 220, 0.2);
 }
 
 * {
@@ -17,17 +14,409 @@
 }
 
 body {
+  position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   color: var(--text);
-  background: linear-gradient(135deg, var(--bg-1), var(--bg-2), var(--bg-3));
+  background: #0a1a12;
   padding: 1rem;
 }
 
+/* ---------- Scene (fixed background) ---------- */
+
+.scene {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Sky: gradient is drawn with background-image so the slow vertical
+   shimmer (background-position) is visible at the 200% background-size. */
+.sky {
+  position: absolute;
+  inset: 0;
+  background-size: 100% 200%;
+  animation: skyShift 40s ease-in-out infinite alternate;
+}
+
+body.phase-day .sky {
+  background-image: linear-gradient(#2f86d8 0%, #7cc8ff 45%, #cdeeff 75%, #e8fbff 100%);
+}
+body.phase-dawn .sky {
+  background-image: linear-gradient(#243b75 0%, #6c5a9e 30%, #e98aa0 58%, #ffc99a 80%, #ffe6b8 100%);
+}
+body.phase-dusk .sky {
+  background-image: linear-gradient(#150f35 0%, #4d2a68 35%, #b0476f 62%, #f08a5d 85%, #ffb878 100%);
+}
+body.phase-night .sky {
+  background-image: linear-gradient(#020610 0%, #081630 50%, #0f2a3f 80%, #163a4a 100%);
+}
+
+@keyframes skyShift {
+  from { background-position: 0% 0%; }
+  to { background-position: 0% 100%; }
+}
+
+/* Stars */
+.stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 3s ease;
+}
+body.phase-night .stars {
+  opacity: 1;
+}
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 4px #cfe8ff;
+  animation: twinkle 3s ease-in-out infinite;
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}
+
+/* Shooting stars (night only) */
+.shooting {
+  position: absolute;
+  top: 8%;
+  left: -20%;
+  width: 140px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #ffffff 80%, #bfe6ff);
+  box-shadow: 0 0 8px #cfe8ff;
+  opacity: 0;
+  transform: rotate(20deg);
+}
+.shooting.s1 { top: 6%; animation: shoot 9s linear infinite; animation-delay: -2s; }
+.shooting.s2 { top: 16%; animation: shoot 13s linear infinite; animation-delay: -7s; }
+.shooting.s3 { top: 3%; animation: shoot 17s linear infinite; animation-delay: -11s; }
+body.phase-night .shooting {
+  animation-play-state: running;
+}
+@keyframes shoot {
+  0% { opacity: 0; transform: translate(0, 0) rotate(20deg); }
+  3% { opacity: 1; }
+  8% { opacity: 0; transform: translate(70vw, 30vh) rotate(20deg); }
+  100% { opacity: 0; transform: translate(70vw, 30vh) rotate(20deg); }
+}
+body:not(.phase-night) .shooting {
+  display: none;
+}
+
+/* Sun and moon */
+.celestial {
+  position: absolute;
+  left: var(--x, 50%);
+  top: var(--y, 20%);
+  transform: translate(-50%, -50%);
+  transition: left 2s linear, top 2s linear, opacity 2s ease;
+}
+.sun {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff7c2 0 35%, #ffd35c 55%, rgba(255, 200, 80, 0) 72%);
+  box-shadow: 0 0 80px 30px rgba(255, 220, 120, 0.35);
+}
+/* Slowly rotating sun rays */
+.sun::before {
+  content: '';
+  position: absolute;
+  inset: -90px;
+  border-radius: 50%;
+  background: repeating-conic-gradient(rgba(255, 240, 180, 0.14) 0 6deg, transparent 6deg 18deg);
+  -webkit-mask: radial-gradient(circle, #000 25%, transparent 70%);
+          mask: radial-gradient(circle, #000 25%, transparent 70%);
+  animation: spin 60s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.moon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff, #d9e4f0 60%, #b9c8da);
+  box-shadow: 0 0 40px 10px rgba(200, 220, 255, 0.3);
+  opacity: 0;
+}
+body.phase-night .sun {
+  opacity: 0;
+}
+body.phase-night .moon {
+  opacity: 1;
+}
+
+/* Clouds */
+.cloud {
+  position: absolute;
+  left: 0;
+  width: 180px;
+  height: 50px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.75);
+  filter: blur(0.5px);
+  animation: drift linear infinite;
+}
+.cloud::before,
+.cloud::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: inherit;
+}
+.cloud::before {
+  width: 90px;
+  height: 80px;
+  left: 25px;
+  top: -35px;
+}
+.cloud::after {
+  width: 70px;
+  height: 60px;
+  left: 95px;
+  top: -25px;
+}
+.c1 { top: 10%; animation-duration: 70s; animation-delay: -10s; }
+.c2 { top: 22%; width: 240px; opacity: 0.6; animation-duration: 95s; animation-delay: -40s; }
+.c3 { top: 4%; opacity: 0.85; animation-duration: 55s; animation-delay: -20s; }
+body.phase-night .cloud {
+  background: rgba(120, 140, 170, 0.25);
+}
+@keyframes drift {
+  from { transform: translateX(-260px); }
+  to { transform: translateX(calc(100vw + 260px)); }
+}
+
+/* Birds */
+.bird {
+  position: absolute;
+  left: -60px;
+  width: 44px;
+  height: 18px;
+  animation: fly linear infinite;
+}
+.bird svg {
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+  animation: flap 0.6s ease-in-out infinite alternate;
+}
+.bird path {
+  fill: none;
+  stroke: #1b2a33;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.b1 { top: 18%; animation-duration: 38s; animation-delay: -5s; }
+.b2 { top: 26%; width: 30px; height: 12px; animation-duration: 46s; animation-delay: -22s; }
+.b3 { top: 14%; width: 36px; height: 15px; animation-duration: 52s; animation-delay: -35s; }
+body.phase-night .bird {
+  opacity: 0;
+}
+@keyframes fly {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(100vw + 120px)); }
+}
+@keyframes flap {
+  from { transform: scaleY(1); }
+  to { transform: scaleY(0.45); }
+}
+
+/* Mountains */
+.mountains {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18vh;
+  height: 38vh;
+  background: linear-gradient(#5b7d92, #22405a);
+  clip-path: polygon(0% 100%, 0% 60%, 15% 35%, 30% 55%, 48% 20%, 65% 50%, 80% 30%, 100% 60%, 100% 100%);
+  opacity: 0.75;
+  transition: filter 3s ease;
+}
+body.phase-night .mountains {
+  filter: brightness(0.5);
+}
+
+/* Mist layers drifting between the tree rows */
+.mist {
+  position: absolute;
+  left: -25%;
+  right: -25%;
+  height: 26vh;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 40% 50% at 30% 60%, rgba(225, 242, 238, 0.20), transparent 70%),
+    radial-gradient(ellipse 35% 45% at 72% 70%, rgba(225, 242, 238, 0.16), transparent 70%);
+  animation: mistDrift 36s ease-in-out infinite alternate;
+}
+.mist-back {
+  bottom: 14vh;
+  opacity: 0.8;
+}
+.mist-front {
+  bottom: 2vh;
+  height: 20vh;
+  animation-duration: 48s;
+  animation-delay: -12s;
+}
+@keyframes mistDrift {
+  from { transform: translateX(-6%); }
+  to { transform: translateX(6%); }
+}
+
+/* Forest layers */
+.forest {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 40vh;
+}
+.forest-far {
+  bottom: 16vh;
+  opacity: 0.8;
+}
+.forest-mid {
+  bottom: 9vh;
+}
+.forest-near {
+  bottom: -2vh;
+}
+
+.pine {
+  position: absolute;
+  bottom: 0;
+  transform-origin: 50% 100%;
+  clip-path: polygon(50% 0%, 80% 26%, 68% 26%, 94% 52%, 80% 52%, 100% 80%, 58% 80%, 58% 100%, 42% 100%, 42% 80%, 0% 80%, 20% 52%, 6% 52%, 32% 26%, 20% 26%);
+  animation: sway 6s ease-in-out infinite alternate;
+  transition: filter 3s ease;
+}
+body.phase-night .pine {
+  filter: brightness(0.55);
+}
+@keyframes sway {
+  from { transform: rotate(-1.2deg); }
+  to { transform: rotate(1.2deg); }
+}
+
+/* Ground with grass tufts */
+.ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 14vh;
+  background: linear-gradient(#25602e, #0a2412);
+}
+.ground::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -10px;
+  height: 12px;
+  background: radial-gradient(circle at 10px 100%, #2e6b33 6px, transparent 7px) repeat-x;
+  background-size: 20px 12px;
+}
+
+/* Fog */
+.fog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 32vh;
+  overflow: hidden;
+}
+.fog::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -50%;
+  right: -50%;
+  background:
+    radial-gradient(ellipse 40% 50% at 25% 80%, rgba(230, 245, 240, 0.22), transparent 70%),
+    radial-gradient(ellipse 35% 45% at 70% 90%, rgba(230, 245, 240, 0.18), transparent 70%);
+  animation: fogDrift 30s ease-in-out infinite alternate;
+}
+@keyframes fogDrift {
+  from { transform: translateX(-8%); }
+  to { transform: translateX(8%); }
+}
+
+/* Fireflies */
+.fireflies {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 3s ease;
+}
+body.phase-dusk .fireflies,
+body.phase-night .fireflies {
+  opacity: 1;
+}
+.firefly {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #e4ff8a;
+  box-shadow: 0 0 8px 3px rgba(220, 255, 120, 0.6);
+  animation: wander 10s ease-in-out infinite alternate, glow 2.6s ease-in-out infinite;
+}
+@keyframes wander {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(40px, -25px); }
+  66% { transform: translate(-30px, -50px); }
+  100% { transform: translate(20px, 15px); }
+}
+@keyframes glow {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+/* Falling leaves */
+.leaves {
+  position: absolute;
+  inset: 0;
+}
+.leaf {
+  position: absolute;
+  top: -30px;
+  width: 12px;
+  height: 8px;
+  border-radius: 0 80% 0 80%;
+  opacity: 0.9;
+  animation: fall linear infinite;
+}
+@keyframes fall {
+  0% { transform: translate(0, -20px) rotate(0deg); }
+  25% { transform: translate(30px, 25vh) rotate(180deg); }
+  50% { transform: translate(-20px, 50vh) rotate(360deg); }
+  75% { transform: translate(25px, 75vh) rotate(540deg); }
+  100% { transform: translate(-10px, 110vh) rotate(720deg); }
+}
+
+/* ---------- Clock card ---------- */
+
 .clock-container {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -40,6 +429,11 @@ body {
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
   text-align: center;
+  animation: cardRise 1.2s ease-out both;
+}
+@keyframes cardRise {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to { opacity: 1; transform: none; }
 }
 
 .clock-title {
@@ -79,7 +473,7 @@ body {
 }
 
 .tick::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 6px;
   left: 0;
@@ -157,12 +551,33 @@ body {
 }
 
 .clock {
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   font-variant-numeric: tabular-nums;
   font-size: clamp(2.5rem, 10vw, 4.5rem);
   font-weight: 700;
   letter-spacing: 0.05em;
-  text-shadow: 0 0 20px rgba(79, 209, 255, 0.35);
+  text-shadow: 0 0 20px rgba(168, 242, 154, 0.35);
+}
+
+.clock span {
+  display: inline-block;
+}
+
+.colon {
+  animation: blink 1s steps(1, end) infinite;
+}
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0.2; }
+}
+
+/* Digit flip when a value changes */
+.flip {
+  animation: flip 0.4s ease-out;
+}
+@keyframes flip {
+  0% { transform: rotateX(-90deg); opacity: 0.2; }
+  100% { transform: rotateX(0deg); opacity: 1; }
 }
 
 .ampm {
@@ -190,15 +605,16 @@ body {
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--text);
-  background: rgba(79, 209, 255, 0.15);
+  background: rgba(168, 242, 154, 0.15);
   border: 1px solid var(--accent);
   border-radius: 999px;
   cursor: pointer;
+  pointer-events: auto;
   transition: background 0.2s ease, transform 0.1s ease;
 }
 
 .format-toggle:hover {
-  background: rgba(79, 209, 255, 0.3);
+  background: rgba(168, 242, 154, 0.3);
 }
 
 .format-toggle:active {
@@ -210,22 +626,34 @@ body {
   outline-offset: 3px;
 }
 
-/* ---------- Light mode ---------- */
+/* ---------- Small screens ---------- */
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-1: #dfefff;
-    --bg-2: #c3ddf5;
-    --bg-3: #a9cdee;
-    --card-bg: rgba(255, 255, 255, 0.55);
-    --card-border: rgba(0, 60, 120, 0.2);
-    --text: #10243a;
-    --muted: rgba(16, 36, 58, 0.65);
-    --accent: #0077c2;
-    --second: #d93652;
+@media (max-width: 480px) {
+  .clock-container {
+    padding: 1.25rem;
   }
 
-  .clock {
-    text-shadow: none;
+  .analog-clock {
+    width: 150px;
+  }
+
+  .shooting {
+    width: 90px;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .leaf,
+  .firefly,
+  .bird,
+  .shooting {
+    display: none !important;
   }
 }

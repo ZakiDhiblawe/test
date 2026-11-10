@@ -3,11 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Realtime Clock</title>
+  <meta name="theme-color" content="#10251e">
+  <title>Forest Time</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="forest" aria-hidden="true">
+    <div class="sky-glow"></div>
+    <div class="mist mist-one"></div><div class="mist mist-two"></div>
+    <div class="tree-line far"></div><div class="tree-line mid"></div><div class="tree-line near"></div>
+    <div class="forest-floor"></div>
+    <div class="fireflies"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
   <main class="stage">
+    <p class="eyebrow">A moment in the wild</p>
     <div class="clock" role="img" aria-label="Analog clock showing local time">
       <div class="bezel">
         <div class="dial" id="dial">
@@ -23,6 +32,7 @@
     </div>
     <time id="digital" class="digital"></time>
     <p id="date" class="date"></p>
+    <p class="local-note"><span></span> Your local time</p>
   </main>
   <script src="script.js"></script>
 </body>

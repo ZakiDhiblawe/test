@@ -1,74 +1,29 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
 <head>
-  <meta charset='UTF-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-  <title>Forest Real-Time Clock</title>
-  <link rel='stylesheet' href='style.css'>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Realtime Clock</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class='phase-day'>
-  <div class='scene' aria-hidden='true'>
-    <div class='sky'></div>
-    <div class='stars' id='stars'></div>
-    <div class='shooting s1'></div>
-    <div class='shooting s2'></div>
-    <div class='shooting s3'></div>
-    <div class='celestial sun' id='sun'></div>
-    <div class='celestial moon' id='moon'></div>
-    <div class='cloud c1'></div>
-    <div class='cloud c2'></div>
-    <div class='cloud c3'></div>
-    <div class='bird b1'><svg viewBox='0 0 44 18'><path d='M2 12 Q12 0 22 10 Q32 0 42 12'/></svg></div>
-    <div class='bird b2'><svg viewBox='0 0 44 18'><path d='M2 12 Q12 0 22 10 Q32 0 42 12'/></svg></div>
-    <div class='bird b3'><svg viewBox='0 0 44 18'><path d='M2 12 Q12 0 22 10 Q32 0 42 12'/></svg></div>
-    <div class='mountains'></div>
-    <div class='forest forest-far' id='forestFar'></div>
-    <div class='mist mist-back'></div>
-    <div class='forest forest-mid' id='forestMid'></div>
-    <div class='ground'></div>
-    <div class='forest forest-near' id='forestNear'></div>
-    <div class='fireflies' id='fireflies'></div>
-    <div class='leaves' id='leaves'></div>
-    <div class='mist mist-front'></div>
-    <div class='fog'></div>
-  </div>
-
-  <main class='clock-container'>
-    <h1 class='clock-title'>Real-Time Clock</h1>
-
-    <div class='analog-clock' id='analog' aria-hidden='true'>
-      <div class='face'>
-        <div class='tick tick-12'></div>
-        <div class='tick tick-1'></div>
-        <div class='tick tick-2'></div>
-        <div class='tick tick-3'></div>
-        <div class='tick tick-4'></div>
-        <div class='tick tick-5'></div>
-        <div class='tick tick-6'></div>
-        <div class='tick tick-7'></div>
-        <div class='tick tick-8'></div>
-        <div class='tick tick-9'></div>
-        <div class='tick tick-10'></div>
-        <div class='tick tick-11'></div>
-        <div class='hand hour-hand' id='hourHand'></div>
-        <div class='hand minute-hand' id='minuteHand'></div>
-        <div class='hand second-hand' id='secondHand'></div>
-        <div class='center-dot'></div>
+<body>
+  <main class="stage">
+    <div class="clock" role="img" aria-label="Analog clock showing local time">
+      <div class="bezel">
+        <div class="dial" id="dial">
+          <span class="brand">CHRONO</span>
+          <span class="sub">QUARTZ &middot; LOCAL TIME</span>
+          <div class="hand hour" id="hourHand"></div>
+          <div class="hand minute" id="minuteHand"></div>
+          <div class="hand second" id="secondHand"></div>
+          <div class="pin"></div>
+          <div class="glass"></div>
+        </div>
       </div>
     </div>
-
-    <div class='digital'>
-      <time id='clock' class='clock' datetime=''><span id='hh'>00</span><span class='colon'>:</span><span id='mm'>00</span><span class='colon'>:</span><span id='ss'>00</span></time>
-      <span id='ampm' class='ampm' hidden></span>
-    </div>
-
-    <p id='date' class='date'></p>
-    <p id='timezone' class='timezone'></p>
-
-    <button id='formatToggle' class='format-toggle' type='button' aria-label='Toggle between 12 hour and 24 hour format'>
-      Switch to 12-hour
-    </button>
+    <time id="digital" class="digital"></time>
+    <p id="date" class="date"></p>
   </main>
-  <script src='script.js'></script>
+  <script src="script.js"></script>
 </body>
 </html>

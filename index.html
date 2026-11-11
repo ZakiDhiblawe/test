@@ -4,19 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#10251e">
-  <title>Forest Time</title>
+  <title>Forest River Time</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="forest" aria-hidden="true">
-    <div class="sky-glow"></div>
-    <div class="mist mist-one"></div><div class="mist mist-two"></div>
-    <div class="tree-line far"></div><div class="tree-line mid"></div><div class="tree-line near"></div>
-    <div class="forest-floor"></div>
-    <div class="fireflies"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="scene" aria-hidden="true">
+    <div class="photo"></div>
+    <div class="sky-tint"></div>
+    <div class="stars"></div>
+    <div class="sun-track"><div class="sun"></div></div>
+    <div class="moon"></div>
+    <div class="shade"></div>
   </div>
   <main class="stage">
-    <p class="eyebrow">A moment in the wild</p>
+    <p class="eyebrow">Sunrise to sunset, live</p>
     <div class="clock" role="img" aria-label="Analog clock showing local time">
       <div class="bezel">
         <div class="dial" id="dial">
@@ -30,9 +31,12 @@
         </div>
       </div>
     </div>
-    <time id="digital" class="digital"></time>
-    <p id="date" class="date"></p>
-    <p class="local-note"><span></span> Your local time</p>
+    <div class="panel">
+      <time id="digital" class="digital"></time>
+      <p id="date" class="date"></p>
+      <p class="local-note"><span></span> Your local time &middot; <b id="phase">day</b></p>
+    </div>
+    <p class="credit">Forest stream photo: <a href="https://commons.wikimedia.org/wiki/File:Ruisseau_du_Vialais_-_March_2021_-_B.jpg" target="_blank" rel="noopener noreferrer">Christian Ferrer / Wikimedia Commons</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></p>
   </main>
   <script src="script.js"></script>
 </body>

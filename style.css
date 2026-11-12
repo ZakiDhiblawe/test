@@ -23,10 +23,9 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-/* Animated rainforest rainstorm GIF (public domain, USDA Forest Service) with sky effects driven by script.js */
-.scene { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: -1; overflow: hidden; pointer-events: none; background: #10201a; }
-.photo { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-  background: url("assets/rain-forest.gif") center center / cover no-repeat;
+/* 1080p rainforest rain video (CC BY 4.0, Wikimedia Commons), full-bleed; sky effects driven by script.js */
+.scene { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: #10201a; }
+.photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;
   filter: brightness(var(--photo-bright)) saturate(1.1); transition: filter 2s linear; }
 .sky-tint { position: absolute; inset: 0; background: var(--sky-tint); mix-blend-mode: multiply; transition: background 2s linear; }
 .sun-track { position: absolute; inset: 0; }
@@ -86,3 +85,4 @@ body {
 @media (max-height: 680px) { .stage { gap: .55rem; padding: .75rem; } .clock { --size: min(66vw, 42vh, 340px); } .panel { padding: .6rem 1.4rem; gap: .25rem; } }
 @media (max-width: 480px) { .panel { padding: .8rem 1.2rem; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+.credit { position: fixed; right: 10px; bottom: 6px; z-index: 2; font-size: 11px; color: rgba(255,255,255,.6); } .credit a { color: inherit; }

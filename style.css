@@ -22,11 +22,25 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-/* Real photo background, with layered sky effects driven by script.js */
+/* Green rain forest background, with layered sky effects driven by script.js */
 .scene { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
   background: linear-gradient(180deg, #4a6f8f 0%, #2d4a3e 60%, #10201a 100%); }
-.photo { position: absolute; inset: 0; background: url("assets/landscape.jpg") center / cover no-repeat;
-  filter: brightness(var(--photo-bright)) saturate(1.05); transition: filter 2s linear; }
+.photo { position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(120,170,140,0) 55%, rgba(190,225,200,.35) 85%, rgba(150,200,165,.2) 100%),
+    linear-gradient(180deg, #7fae95 0%, #4f8a6c 40%, #2f5f48 100%);
+  filter: brightness(var(--photo-bright)) saturate(1.1); transition: filter 2s linear; overflow: hidden; }
+.photo::before, .photo::after { content: ""; position: absolute; left: -5%; right: -5%; bottom: 0; }
+.photo::before { height: 70%; background: #2e6b4a;
+  clip-path: polygon(0 100%,0 55%,4% 30%,8% 55%,12% 20%,17% 55%,22% 25%,27% 58%,33% 15%,39% 55%,45% 28%,50% 60%,56% 18%,62% 55%,68% 25%,74% 58%,80% 12%,86% 55%,91% 30%,96% 55%,100% 35%,100% 100%);
+  opacity: .8; }
+.photo::after { height: 52%; background: linear-gradient(180deg, #1e4d34, #0f2b1c);
+  clip-path: polygon(0 100%,0 50%,5% 20%,10% 50%,15% 8%,21% 50%,28% 18%,34% 52%,41% 5%,48% 50%,54% 22%,61% 55%,67% 10%,73% 50%,79% 20%,85% 52%,92% 8%,97% 48%,100% 25%,100% 100%); }
+.rain { position: absolute; inset: -20% -10%; opacity: .55;
+  background: repeating-linear-gradient(100deg, rgba(210,240,225,0) 0 14px, rgba(210,240,225,.55) 14px 15px, rgba(210,240,225,0) 15px 38px);
+  background-size: 120px 200px; animation: rain-fall .6s linear infinite; }
+.rain.fast { opacity: .35; background-size: 70px 130px; animation-duration: .4s; }
+@keyframes rain-fall { from { background-position: 0 0; } to { background-position: -40px 200px; } }
 .sky-tint { position: absolute; inset: 0; background: var(--sky-tint); mix-blend-mode: multiply; transition: background 2s linear; }
 .sun-track { position: absolute; inset: 0; }
 .sun { position: absolute; left: calc(var(--sun-x) * 100%); top: calc(var(--sun-y) * 100%);
@@ -82,8 +96,6 @@ body {
 .local-note { color: #e3eadb; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; display: flex; align-items: center; gap: .5rem; }
 .local-note b { font-weight: 600; color: #ffd98a; }
 .local-note span { width: 7px; height: 7px; border-radius: 50%; background: #a6d976; box-shadow: 0 0 10px #a6d976; }
-.credit { font-size: .65rem; color: rgba(255,255,255,.65); }
-.credit a { color: inherit; }
 @media (max-height: 680px) { .stage { gap: .55rem; padding: .75rem; } .clock { --size: min(66vw, 42vh, 340px); } .panel { padding: .6rem 1.4rem; gap: .25rem; } }
 @media (max-width: 480px) { .panel { padding: .8rem 1.2rem; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
